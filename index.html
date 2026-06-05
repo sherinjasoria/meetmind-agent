@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeetMind — AI Meeting Intelligence</title>
+    <link rel="stylesheet" href="http://localhost:3000/style.css">
+<script src="http://localhost:3000/script.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+   <canvas id="particles"></canvas>
+<!-- TOP BAR -->
+<div class="topbar">
+<div class="alerts-banner" id="alerts-banner">
+    <div class="alert-item">🚨 Rahul Sharma — Meeting tomorrow! Prep incomplete</div>
+    <div class="alert-item">⚠️ Arjun Singh — Case studies not sent yet — 21 days overdue</div>
+    <div class="alert-item">💡 Priya Mehta — Board meeting this month — follow up now!</div>
+</div>
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <div class="logo">
+            🧠 <span>MeetMind</span>
+        </div>
+        <div class="memory-status">
+            <div class="pulse-dot"></div>
+            <span>Memory: LIVE</span>
+        </div>
+        <div class="toggle-container">
+            <span class="toggle-label">Memory OFF</span>
+            <label class="toggle">
+                <input type="checkbox" id="memoryToggle" checked>
+                <span class="slider"></span>
+            </label>
+            <span class="toggle-label">Memory ON</span>
+        </div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showPage('dashboard')">Dashboard</button>
+            <button class="nav-tab" onclick="showPage('timeline')">Timeline</button>
+            <button class="nav-tab" onclick="showPage('contacts')">Contacts</button>
+            </div>
+    </div>
+    <!-- SMART ALERTS BANNER -->
+    <div class="alerts-banner" id="alerts-banner">
+        <div class="alert-item">🚨 Rahul Sharma — Meeting tomorrow! Prep incomplete</div>
+        <div class="alert-item">⚠️ Arjun Singh — Case studies not sent — 21 days overdue</div>
+        <div class="alert-item">💡 Priya Mehta — Board meeting this month — follow up now!</div>
+    </div>
+        </div>
+    </div>
+
+    <!-- PAGE: DASHBOARD -->
+    <div id="page-dashboard" class="page active">
+        <div class="main-layout">
+            <!-- LEFT: CONTACTS -->
+            <div class="left-panel">
+                <div class="panel-header">Contacts</div>
+                <div id="contacts-list"></div>
+            </div>
+
+            <!-- CENTER: CHAT -->
+            <div class="center-panel">
+                <div class="chat-header" id="chat-header">
+                    <span>Select a contact to start</span>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="empty-state">
+                        <div class="empty-icon">🧠</div>
+                        <div>Select a contact from the left</div>
+                        <div class="empty-sub">MeetMind will recall everything from memory</div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="chatInput" placeholder="Ask anything about your next meeting..." />
+                    <button onclick="sendMessage()" id="sendBtn">Send →</button>
+                </div>
+            </div>
+
+            <!-- RIGHT: BRIEF -->
+            <div class="right-panel">
+                <div class="panel-header">Meeting Brief</div>
+                <div id="brief-content">
+                    <div class="empty-state small">
+                        <div>Select a contact</div>
+                        <div class="empty-sub">Brief will appear here</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE: TIMELINE -->
+    <div id="page-timeline" class="page">
+        <div class="timeline-page">
+            <div class="timeline-header">
+                <h2>Memory Timeline</h2>
+                <p>Every interaction, remembered forever</p>
+                <div class="timeline-contact-selector" id="timeline-contact-selector"></div>
+            </div>
+            <div class="timeline-container" id="timeline-container">
+                <div class="empty-state">Select a contact above to view their timeline</div>
+            </div>
+            <div class="timeline-detail" id="timeline-detail"></div>
+        </div>
+    </div>
+
+    <!-- PAGE: CONTACTS -->
+    <div id="page-contacts" class="page">
+        <div class="contacts-page">
+            <div class="contacts-header">
+                <h2>All Contacts</h2>
+                <p>Memory strength & relationship health</p>
+            </div>
+            <div id="contacts-grid"></div>
+        </div>
+    </div>
+<!-- PRACTICE MODE MODAL -->
+<div class="modal-overlay" id="practice-overlay">
+    <div class="modal practice-modal">
+        <div class="practice-header">
+            <div>
+                <h3>🎯 Practice Mode</h3>
+                <p id="practice-subtitle">You're practicing with <strong id="practice-contact-name"></strong></p>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button onclick="getPracticeScorecard()" class="btn-score">📊 Get Scorecard</button>
+                <button onclick="closePractice()" class="btn-secondary" style="padding: 8px 16px;">✕</button>
+            </div>
+        </div>
+        <div class="practice-messages" id="practice-messages"></div>
+        <div class="chat-input-container" style="border-top: 1px solid rgba(255,255,255,0.06); padding: 16px;">
+            <input type="text" id="practiceInput" placeholder="Respond to the client..." />
+            <button onclick="sendPracticeMessage()" class="btn-primary">Send →</button>
+        </div>
+    </div>
+</div>
+
+    <!-- POST MEETING MODAL -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <h3>🧠 Post-Meeting Learning</h3>
+            <p>How did the meeting go? Tell MeetMind — it will remember for next time.</p>
+            <textarea id="outcomeInput" placeholder="e.g. Meeting went well. Rahul agreed to sign by June 15. He was concerned about data privacy clauses..."></textarea>
+            <div class="modal-buttons">
+                <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+                <button onclick="submitOutcome()" class="btn-primary">Save to Memory 🧠</button>
+                <button onclick="openPractice()" style="float:right; margin-right: 8px; background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.3); color: #60a5fa; padding: 4px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-family: Inter, sans-serif;">
+    🎯 Practice Meeting
+</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
